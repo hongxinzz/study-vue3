@@ -1,20 +1,24 @@
+<!--
+ * @Author: xinghe
+ * @LastEditors: xinghe
+ * @Date: 2020-12-09 22:45:30
+ * @FilePath: /vue3-project/src/App.vue
+ * @LastEditTime: 2020-12-09 22:58:36
+-->
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div>
+    <img src="./assets/logo.png" alt="">
+    <Count></Count>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
-
-@Component({
-  components: {
-    HelloWorld,
-  },
-})
-export default class App extends Vue {}
+import { computed, ref } from 'vue';
+import Count from './components/count.vue'
+export default {
+  name:'app',
+  components:{Count},
+};
 </script>
 
 <style>
