@@ -3,7 +3,7 @@
  * @LastEditors: xinghe
  * @Date: 2020-12-09 22:56:58
  * @FilePath: /vue3-project/src/components/count.vue
- * @LastEditTime: 2020-12-10 10:56:12
+ * @LastEditTime: 2020-12-10 15:07:42
 -->
 <template>
   <div>
@@ -20,7 +20,7 @@
       {{ person.name }}
     </div>
     <div>x:{{ x }},y:{{ y }}</div>
-    <template v-if="loading"> loading.... </template>
+    <!-- <template v-if="loading"> loading.... </template>
     <template v-else>
       <img :src="result.message" alt="">
     </template>
@@ -28,8 +28,22 @@
     <template v-if="loading2"> loading.... </template>
     <template v-else>
       <img :src="result2[0].url" alt="">
-    </template>
+    </template> -->
     <div @click="increase">👍 + 1</div>
+    <div>
+        <button @click="changeTestDialog">显示弹窗</button>
+    </div>
+
+    <TestDialog :show="showTestDialog" @close="showTestDialog=false"></TestDialog>
+
+    <Suspense>
+        <template #default>
+            <AsyncComponent />
+        </template>
+        <template #fallback>
+            async  loading....
+        </template>
+    </Suspense>
   </div>
 </template>
 
@@ -46,12 +60,16 @@ import {
 } from "vue";
 import useMouse from "../hooks/useMouse";
 import useURLLoader from "../hooks/useURLLoader";
+import TestDialog from './TestDialog.vue';
+import AsyncComponent from './AsyncComponent.vue'
+
 interface DataProps {
   count: number;
   double: number;
   increase: () => void;
   numbers: number[];
   person: { name?: string };
+  showTestDialog: boolean;
 }
 interface DogResult{
     message: string;
@@ -65,9 +83,16 @@ interface CatResult{
 }
 export default {
   name: "app",
-  setup() {
+  props:{
+      msg:{
+          reuqire:true,
+          default:""
+      }
+  },
+  components:{TestDialog,AsyncComponent},
+  setup(props,context) {
     onMounted(() => {
-      console.log("mounted");
+      console.log("mounted",props.msg,context);
     });
     //   onUpdated(() => {
     //       console.log('updated')
@@ -95,6 +120,7 @@ export default {
       double: computed(() => data.count * 2),
       numbers: [0, 1, 2],
       person: {},
+      showTestDialog:false,
     });
 
     watch(
@@ -108,6 +134,10 @@ export default {
         }
       }
     );
+
+    const changeTestDialog = () => {
+        data.showTestDialog = true;
+    }
 
     data.numbers[0] = 5;
     data.person.name = "test";
@@ -126,7 +156,8 @@ export default {
       loading,
       result,
       loading2,
-      result2
+      result2,
+      changeTestDialog
     };
   },
 };

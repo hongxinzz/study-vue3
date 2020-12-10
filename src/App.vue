@@ -3,12 +3,12 @@
  * @LastEditors: xinghe
  * @Date: 2020-12-09 22:45:30
  * @FilePath: /vue3-project/src/App.vue
- * @LastEditTime: 2020-12-10 10:02:58
+ * @LastEditTime: 2020-12-10 14:17:13
 -->
 <template>
   <div>
     <img src="./assets/logo.png" alt="" />
-    <Count></Count>
+    <Count msg="parent msg"  />
   </div>
 </template>
 
