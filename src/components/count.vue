@@ -3,7 +3,7 @@
  * @LastEditors: xinghe
  * @Date: 2020-12-09 22:56:58
  * @FilePath: /vue3-project/src/components/count.vue
- * @LastEditTime: 2020-12-10 15:07:42
+ * @LastEditTime: 2020-12-10 15:31:42
 -->
 <template>
   <div>
@@ -31,18 +31,23 @@
     </template> -->
     <div @click="increase">👍 + 1</div>
     <div>
-        <button @click="changeTestDialog">显示弹窗</button>
+      <button @click="changeTestDialog">显示弹窗</button>
     </div>
 
-    <TestDialog :show="showTestDialog" @close="showTestDialog=false"></TestDialog>
+    <TestDialog
+      :show="showTestDialog"
+      @close="showTestDialog = false"
+    ></TestDialog>
 
+    <p v-if="errorMsg">{{ errorMsg }}</p>
     <Suspense>
-        <template #default>
+      <template #default>
+        <div>
             <AsyncComponent />
-        </template>
-        <template #fallback>
-            async  loading....
-        </template>
+            <DogShow />
+        </div>
+      </template>
+      <template #fallback> async loading.... </template>
     </Suspense>
   </div>
 </template>
@@ -57,11 +62,14 @@ import {
   onUpdated,
   onRenderTriggered,
   watch,
+  onErrorCaptured,
 } from "vue";
+
 import useMouse from "../hooks/useMouse";
 import useURLLoader from "../hooks/useURLLoader";
-import TestDialog from './TestDialog.vue';
-import AsyncComponent from './AsyncComponent.vue'
+import TestDialog from "./TestDialog.vue";
+import AsyncComponent from "./AsyncComponent.vue";
+import DogShow from "./DogShow.vue";
 
 interface DataProps {
   count: number;
@@ -71,28 +79,32 @@ interface DataProps {
   person: { name?: string };
   showTestDialog: boolean;
 }
-interface DogResult{
-    message: string;
-    status: string;
+interface DogResult {
+  message: string;
+  status: string;
 }
-interface CatResult{
-    id: string;
-    url: string;
-    width: number;
-    height: number;
+interface CatResult {
+  id: string;
+  url: string;
+  width: number;
+  height: number;
 }
 export default {
   name: "app",
-  props:{
-      msg:{
-          reuqire:true,
-          default:""
-      }
+  props: {
+    msg: {
+      reuqire: true,
+      default: "",
+    },
   },
-  components:{TestDialog,AsyncComponent},
-  setup(props,context) {
+  components: { TestDialog, AsyncComponent, DogShow },
+  setup(props, context) {
     onMounted(() => {
-      console.log("mounted",props.msg,context);
+      console.log("mounted", props.msg, context);
+    });
+    const errorMsg = ref(null);
+    onErrorCaptured((e: any) => {
+      errorMsg.value = e;
     });
     //   onUpdated(() => {
     //       console.log('updated')
@@ -109,8 +121,12 @@ export default {
     //     count.value++
     //   }
     const { x, y } = useMouse();
-    const { result, loading } = useURLLoader<DogResult>("https://dog.ceo/api/breeds/image/random");
-    const { result:result2, loading:loading2 } = useURLLoader<CatResult[]>("https://api.thecatapi.com/v1/images/search");
+    const { result, loading } = useURLLoader<DogResult>(
+      "https://dog.ceo/api/breeds/image/random"
+    );
+    const { result: result2, loading: loading2 } = useURLLoader<CatResult[]>(
+      "https://api.thecatapi.com/v1/images/search"
+    );
 
     const data: DataProps = reactive({
       count: 0,
@@ -120,7 +136,7 @@ export default {
       double: computed(() => data.count * 2),
       numbers: [0, 1, 2],
       person: {},
-      showTestDialog:false,
+      showTestDialog: false,
     });
 
     watch(
@@ -136,8 +152,8 @@ export default {
     );
 
     const changeTestDialog = () => {
-        data.showTestDialog = true;
-    }
+      data.showTestDialog = true;
+    };
 
     data.numbers[0] = 5;
     data.person.name = "test";
@@ -157,7 +173,8 @@ export default {
       result,
       loading2,
       result2,
-      changeTestDialog
+      changeTestDialog,
+      errorMsg,
     };
   },
 };
