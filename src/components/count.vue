@@ -3,7 +3,7 @@
  * @LastEditors: xinghe
  * @Date: 2020-12-09 22:56:58
  * @FilePath: /vue3-project/src/components/count.vue
- * @LastEditTime: 2020-12-10 10:02:21
+ * @LastEditTime: 2020-12-10 10:56:12
 -->
 <template>
   <div>
@@ -22,7 +22,12 @@
     <div>x:{{ x }},y:{{ y }}</div>
     <template v-if="loading"> loading.... </template>
     <template v-else>
-      {{ result }}
+      <img :src="result.message" alt="">
+    </template>
+
+    <template v-if="loading2"> loading.... </template>
+    <template v-else>
+      <img :src="result2[0].url" alt="">
     </template>
     <div @click="increase">👍 + 1</div>
   </div>
@@ -48,6 +53,16 @@ interface DataProps {
   numbers: number[];
   person: { name?: string };
 }
+interface DogResult{
+    message: string;
+    status: string;
+}
+interface CatResult{
+    id: string;
+    url: string;
+    width: number;
+    height: number;
+}
 export default {
   name: "app",
   setup() {
@@ -69,7 +84,9 @@ export default {
     //     count.value++
     //   }
     const { x, y } = useMouse();
-    const { result, loading } = useURLLoader("http://test.com");
+    const { result, loading } = useURLLoader<DogResult>("https://dog.ceo/api/breeds/image/random");
+    const { result:result2, loading:loading2 } = useURLLoader<CatResult[]>("https://api.thecatapi.com/v1/images/search");
+
     const data: DataProps = reactive({
       count: 0,
       increase: () => {
@@ -108,6 +125,8 @@ export default {
       y,
       loading,
       result,
+      loading2,
+      result2
     };
   },
 };
