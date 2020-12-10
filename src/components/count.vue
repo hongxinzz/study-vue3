@@ -3,7 +3,7 @@
  * @LastEditors: xinghe
  * @Date: 2020-12-09 22:56:58
  * @FilePath: /vue3-project/src/components/count.vue
- * @LastEditTime: 2020-12-10 09:11:25
+ * @LastEditTime: 2020-12-10 09:29:21
 -->
 <template>
   <div>
@@ -19,12 +19,14 @@
     <div>
         {{person.name}}
     </div>
+    <div>x:{{x}},y:{{y}}</div>
     <div @click="increase"> 👍 + 1</div>
   </div>
 </template>
 
 <script lang="ts">
 import { computed, ref, reactive, toRefs, onMounted, onUpdated, onRenderTriggered, watch} from 'vue';
+import useMouse from '../hooks/useMouse'
 interface DataProps{
     count: number;
     double: number;
@@ -52,6 +54,7 @@ export default {
     //   const increase = () => {
     //     count.value++
     //   }
+    const { x, y } = useMouse();
     const data: DataProps = reactive({
         count: 0,
         increase: () => { data.count++ },
@@ -80,7 +83,9 @@ export default {
         // double
         // ...data
         // count:data.count
-        ...refData
+        ...refData,
+        x,
+        y
       }
   }
 };
