@@ -3,21 +3,21 @@
  * @LastEditors: xinghe
  * @Date: 2020-12-09 22:45:30
  * @FilePath: /vue3-project/src/App.vue
- * @LastEditTime: 2020-12-09 22:58:36
+ * @LastEditTime: 2020-12-10 10:02:58
 -->
 <template>
   <div>
-    <img src="./assets/logo.png" alt="">
+    <img src="./assets/logo.png" alt="" />
     <Count></Count>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, ref } from 'vue';
-import Count from './components/count.vue'
+import { computed, ref } from "vue";
+import Count from "./components/count.vue";
 export default {
-  name:'app',
-  components:{Count},
+  name: "app",
+  components: { Count },
 };
 </script>
 
